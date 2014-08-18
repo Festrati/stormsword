@@ -3,19 +3,25 @@ using System.Collections;
 
 /* AbilityUIScript - places ability UI elements on the screen */
 public class AbilityUIScript : MonoBehaviour {
-	
-	public float disabledAlpha = 0.6f;	// Opacity of the ability icon when disabled
-	public float enabledAlpha = 1f;		// 
+
+	[Tooltip("Opacity of the ability icon when disabled")]
+	public float disabledAlpha = 0.6f;
+
+	[Tooltip("Opacity of the ability icon when available to be cast")]
+	public float enabledAlpha = 1f;
 	private float currentAlpha = 1f;		// Current Alpha (opacity) value of the image
 
 	// UI Position
-	public int x;					// X coordinate to display the image at
-	public int y;					// Y coordinate to display the image at
-	public int width;				// Width of the image
-	public int height;				// Height of the image
+	[Tooltip("X coordinate to display the image at")]
+	public int x;
+	[Tooltip("Y coordinate to display the image at")]
+	public int y;
+	[Tooltip("Width of the image")]
+	public int width;
+	[Tooltip("Height of the image"]
+	public int height;
 	private int positioning_x;
 	private int positioning_y;
-
 
 	internal int abilityIndex = 0;			// What # in the array is this ability?
 
