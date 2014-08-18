@@ -25,6 +25,5 @@ public class MainMenuScript : MonoBehaviour {
 	}
 
 	public void ContinueGame() {
-		Debug.Log ("Player wants to continue!");
 	}
 }

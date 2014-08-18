@@ -14,10 +14,15 @@ public enum CameraModes {
  */
 public class CameraScript : MonoBehaviour {
 
-	public CameraModes cameraMode;
+	public CameraModes cameraMode = CameraModes.FollowPlayer;
 	public float speed = 0.15f;
+
 	private Vector3 velocity = Vector3.zero;
 	private Transform target;
+	
+	private float playerZ = 0;	// Player's z index never changes in a 2D game
+	private float cameraMovementX = 0.5f;	// Movement speed in X
+	private float cameraMovementY = 0.5f;	// Movement speed in Y
 
 	// Use this for initialization
 	void Start () {
@@ -31,12 +36,7 @@ public class CameraScript : MonoBehaviour {
 	void Update () {
 		if(target && (cameraMode == CameraModes.FollowPlayer)) {
 			// Only track if player is still alive
-			Vector3 point = camera.WorldToViewportPoint(target.position);	// Player's current position
-			
-			float cameraMovementX = 0.5f;
-			float cameraMovementY = 0.5f;
-
-			Vector3 delta = target.position - camera.ViewportToWorldPoint(new Vector3(cameraMovementX, cameraMovementY, point.z));
+			Vector3 delta = target.position - camera.ViewportToWorldPoint(new Vector3(cameraMovementX, cameraMovementY, playerZ));
 			Vector3 destination = transform.position + delta;
 			this.transform.position = Vector3.SmoothDamp (this.transform.position, destination, ref velocity, speed);
 		}
