@@ -7,7 +7,8 @@ public class MainMenuScript : MonoBehaviour {
 
 	public static MainMenuScript instance;
 
-	public string firstLevel;
+	[Tooltip("Drag the first level (scene) here")]
+	public Object firstScene;
 
 	void Awake() {
 		instance = this;	// Allows us to access MainMenuScript from anywhere 
@@ -19,8 +20,8 @@ public class MainMenuScript : MonoBehaviour {
 	}
 
 	public void StartGame() {
-		Debug.Log ("Loading level: " + firstLevel);
-		Application.LoadLevel(firstLevel);
+		Debug.Log ("Loading scene: " + firstScene.name);
+		Application.LoadLevel(firstScene.name);
 	}
 
 	public void ContinueGame() {
