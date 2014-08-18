@@ -3,17 +3,20 @@ using System.Collections;
 
 /* AbilityUIScript - places ability UI elements on the screen */
 public class AbilityUIScript : MonoBehaviour {
+	
+	public float disabledAlpha = 0.6f;	// Opacity of the ability icon when disabled
+	public float enabledAlpha = 1f;		// 
+	private float currentAlpha = 1f;		// Current Alpha (opacity) value of the image
 
+	// UI Position
 	public int x;					// X coordinate to display the image at
 	public int y;					// Y coordinate to display the image at
 	public int width;				// Width of the image
 	public int height;				// Height of the image
+	private int positioning_x;
+	private int positioning_y;
 
-	public float fadeAlpha = 0.6f;
 
-	private float currentAlpha = 1f;		// Current Alpha (opacity) value of the image
-
-	// UI Position
 	internal int abilityIndex = 0;			// What # in the array is this ability?
 
 	// Ability Hotkey
@@ -40,30 +43,29 @@ public class AbilityUIScript : MonoBehaviour {
 		ability = abilitySlotScript.abilityEquipped;		// Currently equipped ability
 		abilityScript = ability.gameObject.GetComponent<AbilityScript>();
 		abilityIcon = abilityScript.abilityIcon;
+
+		// If there are are multiple abilities equipped, show them next to each other, not on top of each other
+		positioning_x = abilityIndex * 40;	
+		positioning_y = 0;
 	}
 	
 	void OnGUI() {
-
-		// If there are are multiple abilities equipped, show them next to each other, not on top of each other
-		int positioning_x = abilityIndex * 40;	
-		int positioning_y = 0;
-
 		// Draw the ability's image and apply opacity to fade if necessary
 		Color tmpColor = GUI.color;		// Placeholder for current color setting
 		GUI.color = new Color(tmpColor.r, tmpColor.g, tmpColor.b, currentAlpha);
 		GUI.Button(new Rect(x + positioning_x, y + positioning_y, width, height), abilityIcon);	// Draw the actual image
-		GUI.Label (new Rect(x-1 + positioning_x, y+15 + positioning_y, width, height), abilityKey);
-		GUI.color = tmpColor;			// Restore color setting for other GUI elements
+		GUI.Label (new Rect(x-1 + positioning_x, y+15 + positioning_y, width, height), abilityKey);	// Add the key binding
+		GUI.color = tmpColor;			// Restore color setting for other GUI elements drawn in the same frame
 	}
 
 	/* FadeOut - Called to fade the current UI element to partial opacity
 	 	e.g. when it's not available */
 	internal void FadeOut() {
-		currentAlpha = fadeAlpha;
+		currentAlpha = disabledAlpha;
 	}
 
 	/* FadeIn - Called to fade the current UI element to full opacity */
 	internal void FadeIn() {
-		currentAlpha = 1f;	// 1f = 'fully visible'
+		currentAlpha = enabledAlpha;	// 1f = 'fully visible'
 	}
 }
