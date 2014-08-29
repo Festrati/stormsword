@@ -15,7 +15,7 @@ public class WeaponScript : MonoBehaviour {
 	
 	// Weapon stats
 	[Tooltip("Cooldown between attacks")]
-	public float shootingRate = 0.25f;
+	public float attackRate = 0.25f;
 
 	[Tooltip("Damage a weapon does per attack")]
 	public float damage = 1;
@@ -65,46 +65,42 @@ public class WeaponScript : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-				if(comboCooldown > 0) {
-					comboCooldown -= Time.deltaTime;
-					Debug.Log ("fixedupdate Combo timer is : " + comboCooldown);
-				}
-				if(comboCooldown <= 0) {
-					comboCooldown = 0;
-				}
+		if(comboCooldown > 0) {
+			comboCooldown -= Time.deltaTime;
+			Debug.Log ("fixedupdate Combo timer is : " + comboCooldown);
 		}
+		if(comboCooldown <= 0) {
+			comboCooldown = 0;
+		}
+	}
 
 
 	/* Attack - Shot triggered by another script */
 	public void Attack() {
 		if(CanAttack) {
-			mainHandSlot.Cooldown(shootingRate);
+			mainHandSlot.Cooldown(attackRate);
 			// Character attacked, trigger cooldown
  			switch(weaponType) {
-			case WeaponType.Melee: 
-				// Handle melee weapon code here
+				case WeaponType.Melee: 
+					// Only players have combos for now
+					if(ownerType == "Player")
+					{
+						// use attackCounter to decide which state to enter
+						if(attackCounter == 0) {
+							LightAttack();
+						}
 
-				// Only players have combos for now
-				if(ownerType == "Player")
-				{
-					//use attackCounter to decide which state to enter
-					if(attackCounter == 0) {
-						LightAttack();
+						else if(attackCounter == 1) {
+							MediumAttack();
+						}
+
+						else {
+							Debug.Log ("whatd you do to attack counter?");
+							attackCounter = 0;
+						}
 					}
-
-					else if(attackCounter == 1) {
-						MediumAttack();
-					}
-
-					else {
-						Debug.Log ("whatd you do to attack counter?");
-						attackCounter = 0;
-					}
-				}
-
-				// Melee attack is attached to parent (character)
-
-				break;
+	
+					break;
 
 				case WeaponType.Ranged: 
 					// Handle ranged weapon code here
