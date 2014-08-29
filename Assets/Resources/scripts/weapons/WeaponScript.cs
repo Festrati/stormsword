@@ -3,6 +3,11 @@ using System.Collections;
 
 /* WeaponScript - Basic weapon class (Ranged or Melee) */
 
+public enum WeaponType {
+	Melee,
+	Ranged
+}
+
 public class WeaponScript : MonoBehaviour {
 
 	// Projectile prefab for shooting
@@ -32,7 +37,7 @@ public class WeaponScript : MonoBehaviour {
 
 
 	[Tooltip("Is this a Melee or Ranged weapon?")]
-	public string type = "Melee";
+	public WeaponType weaponType = "Melee";
 
 
 
@@ -59,16 +64,14 @@ public class WeaponScript : MonoBehaviour {
 		player = GameObject.FindWithTag("Player");
 	}
 
-	void Update () {
-	}
-
 	void FixedUpdate () {
 				if(comboCooldown > 0) {
 					comboCooldown -= Time.deltaTime;
 					Debug.Log ("fixedupdate Combo timer is : " + comboCooldown);
 				}
-				if(comboCooldown <= 0)
+				if(comboCooldown <= 0) {
 					comboCooldown = 0;
+				}
 		}
 
 
@@ -77,21 +80,23 @@ public class WeaponScript : MonoBehaviour {
 		if(CanAttack) {
 			mainHandSlot.Cooldown(shootingRate);
 			// Character attacked, trigger cooldown
- 			switch(type) {
-			case "Melee": 
+ 			switch(weaponType) {
+			case WeaponType.Melee: 
 				// Handle melee weapon code here
 
 				// Only players have combos for now
 				if(ownerType == "Player")
 				{
 					//use attackCounter to decide which state to enter
-					if(attackCounter == 0)
+					if(attackCounter == 0) {
 						LightAttack();
+					}
 
-					else if(attackCounter == 1)
+					else if(attackCounter == 1) {
 						MediumAttack();
+					}
 
-					else{
+					else {
 						Debug.Log ("whatd you do to attack counter?");
 						attackCounter = 0;
 					}
@@ -101,20 +106,20 @@ public class WeaponScript : MonoBehaviour {
 
 				break;
 
-			case "Ranged": 
-				// Handle ranged weapon code here
-				
-				// Is the player still alive?
-				if(player != null)
-				{
+				case WeaponType.Ranged: 
+					// Handle ranged weapon code here
+					
+					// Is the player still alive?
+					if(player != null)
+					{
 
-					//Shoot directly at player location
-					aiPosition = new Vector2(transform.position.x , transform.position.y);
-					playerPosition = new Vector2(player.transform.position.x, player.transform.position.y);
-					newDirection = (playerPosition - aiPosition);
+						//Shoot directly at player location
+						aiPosition = new Vector2(transform.position.x , transform.position.y);
+						playerPosition = new Vector2(player.transform.position.x, player.transform.position.y);
+						newDirection = (playerPosition - aiPosition);
 
 
-					playerDistance = Vector3.Distance(player.transform.position, aiPosition);
+						playerDistance = Vector3.Distance(player.transform.position, aiPosition);
 
 						// Player is within shot distance
 						if(playerDistance <=5f)
@@ -153,8 +158,8 @@ public class WeaponScript : MonoBehaviour {
 									shotMoveScript.direction = newDirection;
 								}
 						
-							// Fire the actual projectile
-							ProjectileScript projectile = shotTransform.gameObject.GetComponent<ProjectileScript>();
+								// Fire the actual projectile
+								ProjectileScript projectile = shotTransform.gameObject.GetComponent<ProjectileScript>();
 
 								if(projectile) {
 									// Determine what type of player shot this
@@ -162,7 +167,7 @@ public class WeaponScript : MonoBehaviour {
 								}
 							}
 						}
-				}
+					}
 				break;	
 
 			}
