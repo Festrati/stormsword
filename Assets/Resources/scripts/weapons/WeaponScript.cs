@@ -37,7 +37,7 @@ public class WeaponScript : MonoBehaviour {
 
 
 	[Tooltip("Is this a Melee or Ranged weapon?")]
-	public WeaponType weaponType = "Melee";
+	public WeaponType weaponType = WeaponType.Melee;
 
 
 
