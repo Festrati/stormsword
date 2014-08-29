@@ -54,10 +54,8 @@ public class WeaponScript : MonoBehaviour {
 	private float playerDistance;
 	private int attackCounter;
 
-
 	private GameObject player;
-
-	// Use this for initialization
+	
 	void Start () {
 		mainHandSlot = transform.parent.GetComponent<ItemSlotScript>();	// Grab the parent mainhand to get any slot-related info
 		attackCounter = 0;
@@ -67,9 +65,9 @@ public class WeaponScript : MonoBehaviour {
 	void FixedUpdate () {
 		if(comboCooldown > 0) {
 			comboCooldown -= Time.deltaTime;
-			Debug.Log ("fixedupdate Combo timer is : " + comboCooldown);
+//			Debug.Log ("fixedupdate Combo timer is : " + comboCooldown);
 		}
-		if(comboCooldown <= 0) {
+		else if(comboCooldown <= 0) {
 			comboCooldown = 0;
 		}
 	}
@@ -83,20 +81,23 @@ public class WeaponScript : MonoBehaviour {
  			switch(weaponType) {
 				case WeaponType.Melee: 
 					// Only players have combos for now
-					if(ownerType == "Player")
+					if (ownerType == "Player")
 					{
 						// use attackCounter to decide which state to enter
-						if(attackCounter == 0) {
-							LightAttack();
-						}
-
-						else if(attackCounter == 1) {
+						if (attackCounter == 1 && comboCooldown > 0) {
+							// Player is attempting to use Medium Attack
 							MediumAttack();
 						}
-
+						else if (attackCounter == 2 && comboCooldown > 0) {
+							// Player is attempting to use Heavy Attack
+							HeavyAttack();
+						}
 						else {
-							Debug.Log ("whatd you do to attack counter?");
-							attackCounter = 0;
+							// First attack or they missed the combo window, so go back to light attacks!
+							attackCounter  = 0;
+
+							// Player is attempting to use Light attack
+							LightAttack();
 						}
 					}
 	
@@ -224,42 +225,26 @@ public class WeaponScript : MonoBehaviour {
 	*/ 
 	void LightAttack()	{
 		Debug.Log ("entering attack state 1");
-		attackCounter++;
-		// Set a time limit to link the next attack
-		comboCooldown = firstComboCooldown;
+		attackCounter++;	// Player can transition to the next state
+
+		comboCooldown = firstComboCooldown; // Set a time limit to link the next attack
 	}
 
 	
 	// Second state - mid level attack, can transition to heavy attack or idle state
 	void MediumAttack(){
 		// Timer has not hit zero, able to transition to this state
-		if(comboCooldown > 0){
-			Debug.Log ("entering attack state 2");
-			attackCounter++;
-			// Set a time limit to link the next attack
-			comboCooldown = secondComboCooldown;
-		}
+		Debug.Log ("entering attack state 2");
+		attackCounter++;
 
-		// Timer hit zero, going back to idle state
-		else{
-		Debug.Log ("didn't attack in time... combo broken");
-		attackCounter = 0;
-		}
-	
+		comboCooldown = secondComboCooldown; // Set a time limit to link the next attack
 	}
 
 	// Third state - final heavy attack, transitions back to idle state
 	void HeavyAttack(){
 
-		// Timer has not hit zero, able to transition to this state
-		if (comboCooldown > 0) {
-			Debug.Log ("entering final attack state");
-		
-		}
+		Debug.Log ("entering final attack state");
 
-		else{
-				Debug.Log ("didn't attack in time, final combo broken");
-		}
 		// Going back to idle state either way
 		attackCounter = 0;
 	}
